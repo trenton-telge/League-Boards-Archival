@@ -100,7 +100,8 @@ fun main() {
             profileIndex.addElement("https://boards.na.leagueoflegends.com/en/player/NA/" + i.substring(23, i.length - 7))
         }
     }
-    println("Finished Indexing Pofiles")
+    println("${profileIndex.size} profiles found.")
+    println("Finished Indexing Profiles")
     println("Indexing Posts")
     pageCurrent = 0
     val unfilteredPostResults:Vector<String> = Vector()
@@ -123,6 +124,7 @@ fun main() {
             postIndex.addElement("https://boards.na.leagueoflegends.com/$i")
         }
     }
+    println("${postIndex.size} posts found.")
     println("Finished Indexing Posts")
     println("Backing Up Profiles")
     var max = profileIndex.size
@@ -235,6 +237,7 @@ fun main() {
             assetIndex.addElement(i.substring(1))
         }
     }
+    println("${assetIndex.size} assets found.")
     println("Finished Indexing Assets")
     println("Backing Up Assets")
     max = profileIndex.size
