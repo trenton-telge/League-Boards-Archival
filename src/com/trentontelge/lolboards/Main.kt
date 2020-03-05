@@ -81,9 +81,10 @@ fun main() {
     println("Indexing Users")
     pageCurrent = 0
     val unfilteredUserResults:Vector<String> = Vector()
+    var p = Pattern.compile("<span class=\"username\">(.*)</span>")
+    var matcher = p.matcher("")
     while (pageCurrent < 27400){
-        val p = Pattern.compile("<span class=\"username\">(.*)</span>")
-        val matcher = p.matcher("") // Create a matcher for the pattern
+        // Create a matcher for the pattern
         Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
@@ -105,9 +106,9 @@ fun main() {
     println("Indexing Posts")
     pageCurrent = 0
     val unfilteredPostResults:Vector<String> = Vector()
+    p = Pattern.compile("href=\"/en/c/(\\w+-)*(\\w+)/(\\w+-)*(\\w+)")
+    matcher = p.matcher("") // Create a matcher for the pattern
     while (pageCurrent < 27400){
-        val p = Pattern.compile("href=\"/en/c/(\\w+-)*(\\w+)/(\\w+-)*(\\w+)")
-        val matcher = p.matcher("") // Create a matcher for the pattern
         Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
@@ -181,9 +182,9 @@ fun main() {
     println("Indexing Assets")
     pageCurrent = 0
     val unfilteredAssetResults:Vector<String> = Vector()
+    p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
+    matcher = p.matcher("") // Create a matcher for the pattern
     while (pageCurrent < 27400){
-        val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
-        val matcher = p.matcher("") // Create a matcher for the pattern
         Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
@@ -197,8 +198,6 @@ fun main() {
     max = postIndex.size
     currentPost = 1
     for (i in localPosts){
-        val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
-        val matcher = p.matcher("") // Create a matcher for the pattern
         Files.lines(File(i).toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
@@ -212,8 +211,6 @@ fun main() {
     max = profileIndex.size
     currentProfile = 1
     for (i in localProfiles){
-        val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
-        val matcher = p.matcher("") // Create a matcher for the pattern
         Files.lines(File(i).toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
