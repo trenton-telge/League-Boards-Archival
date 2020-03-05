@@ -1,3 +1,5 @@
+@file:Suppress("DuplicatedCode")
+
 package com.trentontelge.lolboards
 
 import java.io.BufferedInputStream
@@ -12,7 +14,6 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-@Suppress("DuplicatedCode")
 fun main() {
     var pageCurrent = 0
     val tlIndex:Vector<String> = Vector()
@@ -67,10 +68,8 @@ fun main() {
                             println("     Page $pageCurrent grab failed.")
 
                         }
-                        e.printStackTrace()
                     }
                 }
-                e.printStackTrace()
             }
         }
         if (pageCurrent > 0 && pageCurrent%100 == 0){
