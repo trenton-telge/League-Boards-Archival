@@ -59,7 +59,7 @@ fun main() {
     while (pageCurrent < 27400){
         val p = Pattern.compile("<span class=\"username\">(.*)</span>")
         val matcher = p.matcher("") // Create a matcher for the pattern
-        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + pageCurrent+1 + ".html").toPath())
+        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
@@ -82,7 +82,7 @@ fun main() {
     while (pageCurrent < 27400){
         val p = Pattern.compile("href=\"/en/c/(\\w+-)*(\\w+)/(\\w+-)*(\\w+)")
         val matcher = p.matcher("") // Create a matcher for the pattern
-        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + pageCurrent+1 + ".html").toPath())
+        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
@@ -105,7 +105,7 @@ fun main() {
     while (pageCurrent < 27400){
         val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
         val matcher = p.matcher("") // Create a matcher for the pattern
-        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + pageCurrent+1 + ".html").toPath())
+        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
                 .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
