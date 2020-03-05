@@ -21,7 +21,7 @@ fun main() {
     val assetIndex:Vector<String> = Vector()
     val localProfiles:Vector<String> = Vector()
     val localPosts:Vector<String> = Vector()
-    val df = DecimalFormat("0.00")
+    val df = DecimalFormat("00.00")
     val tlPrefix = "https://boards.na.leagueoflegends.com/en/?sort_type=recent&num_loaded="
     val outputParent = File(System.getProperty("user.home") + System.getProperty("file.separator") + "boards.na.leagueoflegends.com" + System.getProperty("file.separator"))
     outputParent.mkdir()
@@ -30,7 +30,7 @@ fun main() {
     while(pageCurrent < 27400){
         tlIndex.addElement(tlPrefix + 50*pageCurrent)
         if (pageCurrent > 0 && pageCurrent%100 == 0){
-            println(df.format((pageCurrent/27400F)) + " percent complete.")
+            println(df.format((pageCurrent/27400F)*100) + " percent complete.")
         }
         pageCurrent++
     }
@@ -52,7 +52,7 @@ fun main() {
             e.printStackTrace()
         }
         if (pageCurrent > 0 && pageCurrent%100 == 0){
-            println(df.format((pageCurrent/27400F)) + " percent complete.")
+            println(df.format((pageCurrent/27400F)*100) + " percent complete.")
         }
         pageCurrent++
     }
@@ -69,7 +69,7 @@ fun main() {
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredUserResults.addElement(m.group(1)) }
         if (pageCurrent > 0 && pageCurrent%100 == 0){
-            println(df.format((pageCurrent/27400F)) + " percent complete.")
+            println(df.format((pageCurrent/27400F)*100) + " percent complete.")
         }
         pageCurrent++
     }
@@ -92,7 +92,7 @@ fun main() {
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredPostResults.addElement(m.group(1)) }
         if (pageCurrent > 0 && pageCurrent%100 == 0){
-            println(df.format((pageCurrent/27400F)) + " percent complete.")
+            println(df.format((pageCurrent/27400F)*100) + " percent complete.")
         }
         pageCurrent++
     }
@@ -171,7 +171,7 @@ fun main() {
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
         if (pageCurrent > 0 && pageCurrent%100 == 0){
-            println(df.format((pageCurrent/27400F)) + " percent complete.")
+            println(df.format((pageCurrent/27400F)*100) + " percent complete.")
         }
         pageCurrent++
     }
