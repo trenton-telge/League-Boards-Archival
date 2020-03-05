@@ -134,18 +134,20 @@ fun main() {
         val localParent = File(outputParent.toString() + profileURL.substring(profileURL.indexOf('m')+2, profileURL.lastIndexOf('/')).replace("\\", System.getProperty("file.separator")) + System.getProperty("file.separator"))
         localParent.mkdirs()
         localProfiles.addElement(localParent.toString() + profileURL.substring(profileURL.lastIndexOf('/')+1).replace("\\", System.getProperty("file.separator")) + ".html")
-        try {
-            BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
-                FileOutputStream(File(localParent.toString() + profileURL.substring(profileURL.lastIndexOf('/')+1) + ".html")).use({ fileOutputStream ->
-                    val dataBuffer = ByteArray(1024)
-                    var bytesRead: Int
-                    while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
-                        fileOutputStream.write(dataBuffer, 0, bytesRead)
-                    }
-                })
+        if (!File(localParent.toString() + profileURL.substring(profileURL.lastIndexOf('/') + 1) + ".html").exists()) {
+            try {
+                BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
+                    FileOutputStream(File(localParent.toString() + profileURL.substring(profileURL.lastIndexOf('/') + 1) + ".html")).use({ fileOutputStream ->
+                        val dataBuffer = ByteArray(1024)
+                        var bytesRead: Int
+                        while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
+                            fileOutputStream.write(dataBuffer, 0, bytesRead)
+                        }
+                    })
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
         if (currentProfile%100 == 0){
             println(df.format(currentProfile/max) + " percent complete.")
@@ -160,6 +162,7 @@ fun main() {
         val localParent = File(outputParent.toString() + postURL.substring(postURL.indexOf('m')+2, postURL.lastIndexOf('/')).replace("\\", System.getProperty("file.separator")) + System.getProperty("file.separator"))
         localParent.mkdirs()
         localPosts.addElement(localParent.toString() + postURL.substring(postURL.lastIndexOf('/')+1).replace("\\", System.getProperty("file.separator")) + ".html")
+        if (!File(localParent.toString() + postURL.substring(postURL.lastIndexOf('/')+1) + ".html").exists())
         try {
             BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
                 FileOutputStream(File(localParent.toString() + postURL.substring(postURL.lastIndexOf('/')+1) + ".html")).use({ fileOutputStream ->
@@ -242,18 +245,20 @@ fun main() {
     for (assetURL in assetIndex){
         val localParent = File(outputParent.toString() + assetURL.substring(assetURL.indexOf('/')+2, assetURL.lastIndexOf('/')).replace("\\", System.getProperty("file.separator")) + System.getProperty("file.separator"))
         localParent.mkdirs()
-        try {
-            BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
-                FileOutputStream(File(localParent.toString() + assetURL.substring(assetURL.lastIndexOf('/')+1))).use({ fileOutputStream ->
-                    val dataBuffer = ByteArray(1024)
-                    var bytesRead: Int
-                    while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
-                        fileOutputStream.write(dataBuffer, 0, bytesRead)
-                    }
-                })
+        if (!File(localParent.toString() + assetURL.substring(assetURL.lastIndexOf('/')+1)).exists()) {
+            try {
+                BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
+                    FileOutputStream(File(localParent.toString() + assetURL.substring(assetURL.lastIndexOf('/') + 1))).use({ fileOutputStream ->
+                        val dataBuffer = ByteArray(1024)
+                        var bytesRead: Int
+                        while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
+                            fileOutputStream.write(dataBuffer, 0, bytesRead)
+                        }
+                    })
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
         if (currentAsset%100 == 0){
             println(df.format(currentAsset/max) + " percent complete.")
