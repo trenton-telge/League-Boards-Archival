@@ -130,7 +130,7 @@ fun main() {
     }
     println("Finished Indexing Assets")
     println("Backing Up Profiles")
-    val max = profileIndex.size
+    var max = profileIndex.size
     var currentProfile = 1
     var currentThou = 0
     for (profileURL in profileIndex){
@@ -157,7 +157,31 @@ fun main() {
     }
     println("Finished Backing Up Profiles")
     println("Backing Up Posts")
-    //TODO
+    max = postIndex.size
+    var currentPost = 1
+    currentThou = 0
+    for (postURL in postIndex){
+        val localParent = File(outputParent.toString() + postURL.substring(postURL.indexOf('m')+2, postURL.lastIndexOf('/')) + System.getProperty("file.separator"))
+        localParent.mkdirs()
+        try {
+            BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
+                FileOutputStream(File(localParent.toString() + postURL.substring(postURL.lastIndexOf('/')+1) + ".html")).use({ fileOutputStream ->
+                    val dataBuffer = ByteArray(1024)
+                    var bytesRead: Int
+                    while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
+                        fileOutputStream.write(dataBuffer, 0, bytesRead)
+                    }
+                })
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        if (((currentPost/max.toFloat())*1000).toInt() > currentThou){
+            currentThou = ((currentPost/max.toFloat())*1000).toInt()
+            println((((currentPost/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete.")
+        }
+        currentPost++
+    }
     println("Finished Backing Up Posts")
     println("Backing Up Assets")
     //TODO
