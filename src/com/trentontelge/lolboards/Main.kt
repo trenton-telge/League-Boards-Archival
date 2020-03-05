@@ -38,18 +38,40 @@ fun main() {
     println("Backing Up Top Level")
     pageCurrent = 0
     while (pageCurrent < 27400){
-        try {
-            BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
-                FileOutputStream(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html")).use({ fileOutputStream ->
-                    val dataBuffer = ByteArray(1024)
-                    var bytesRead: Int
-                    while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
-                        fileOutputStream.write(dataBuffer, 0, bytesRead)
+        if (!File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").exists()) {
+            try {
+                BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
+                    FileOutputStream(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent + 1L) + ".html")).use({ fileOutputStream ->
+                        val dataBuffer = ByteArray(1024)
+                        var bytesRead: Int
+                        while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
+                            fileOutputStream.write(dataBuffer, 0, bytesRead)
+                        }
+                    })
+                }
+            } catch (e: IOException) {
+                if (e.toString().contains("500 for URL")) {
+                    println("     Retry 1 for page $pageCurrent")
+                    try {
+                        BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
+                            FileOutputStream(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent + 1L) + ".html")).use({ fileOutputStream ->
+                                val dataBuffer = ByteArray(1024)
+                                var bytesRead: Int
+                                while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
+                                    fileOutputStream.write(dataBuffer, 0, bytesRead)
+                                }
+                            })
+                        }
+                    } catch (e: IOException) {
+                        if (e.toString().contains("500 for URL")) {
+                            println("     Page $pageCurrent grab failed.")
+
+                        }
+                        e.printStackTrace()
                     }
-                })
+                }
+                e.printStackTrace()
             }
-        } catch (e: IOException) {
-            e.printStackTrace()
         }
         if (pageCurrent > 0 && pageCurrent%100 == 0){
             println(df.format((pageCurrent/27400F)*100) + " percent complete.")
