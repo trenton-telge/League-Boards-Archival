@@ -6,6 +6,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
 import java.nio.file.Files
+import java.text.DecimalFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -20,6 +21,7 @@ fun main() {
     val assetIndex:Vector<String> = Vector()
     val localProfiles:Vector<String> = Vector()
     val localPosts:Vector<String> = Vector()
+    val df = DecimalFormat("0.00")
     val tlPrefix = "https://boards.na.leagueoflegends.com/en/?sort_type=recent&num_loaded="
     val outputParent = File(System.getProperty("user.home") + System.getProperty("file.separator") + "boards.na.leagueoflegends.com" + System.getProperty("file.separator"))
     outputParent.mkdir()
@@ -27,8 +29,8 @@ fun main() {
     println("Indexing Boards")
     while(pageCurrent < 27400){
         tlIndex.addElement(tlPrefix + 50*pageCurrent)
-        if (pageCurrent > 0 && pageCurrent/274%100 == 0){
-            println(((pageCurrent/274/100)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent%100 == 0){
+            println(df.format((pageCurrent/27400F)) + " percent complete.")
         }
         pageCurrent++
     }
@@ -49,8 +51,8 @@ fun main() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
-            println(((pageCurrent/274/100F)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent%100 == 0){
+            println(df.format((pageCurrent/27400F)) + " percent complete.")
         }
         pageCurrent++
     }
@@ -66,8 +68,8 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredUserResults.addElement(m.group(1)) }
-        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
-            println(((pageCurrent/274/100F)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent%100 == 0){
+            println(df.format((pageCurrent/27400F)) + " percent complete.")
         }
         pageCurrent++
     }
@@ -89,8 +91,8 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredPostResults.addElement(m.group(1)) }
-        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
-            println(((pageCurrent/274/100F)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent%100 == 0){
+            println(df.format((pageCurrent/27400F)) + " percent complete.")
         }
         pageCurrent++
     }
@@ -124,7 +126,7 @@ fun main() {
         }
         if (((currentProfile/max.toFloat())*1000).toInt() > currentThou){
             currentThou = ((currentProfile/max.toFloat())*1000).toInt()
-            println((((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete.")
+            println(df.format(((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete.")
         }
         currentProfile++
     }
@@ -152,7 +154,7 @@ fun main() {
         }
         if (((currentPost/max.toFloat())*1000).toInt() > currentThou){
             currentThou = ((currentPost/max.toFloat())*1000).toInt()
-            println((((currentPost/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete.")
+            println(df.format(((currentPost/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete.")
         }
         currentPost++
     }
@@ -168,8 +170,8 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
-        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
-            println(((pageCurrent/274/100F)).toString() + " percent complete with top-level.")
+        if (pageCurrent > 0 && pageCurrent%100 == 0){
+            println(df.format((pageCurrent/27400F)) + " percent complete.")
         }
         pageCurrent++
     }
@@ -186,7 +188,7 @@ fun main() {
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
         if (((currentPost/max.toFloat())*1000).toInt() > currentThou){
             currentThou = ((currentPost/max.toFloat())*1000).toInt()
-            println((((currentPost/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete with posts.")
+            println(df.format(((currentPost/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete with posts.")
         }
         currentPost++
     }
@@ -203,7 +205,7 @@ fun main() {
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
         if (((currentProfile/max.toFloat())*1000).toInt() > currentThou){
             currentThou = ((currentProfile/max.toFloat())*1000).toInt()
-            println((((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete with profiles.")
+            println(df.format(((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete with profiles.")
         }
         currentProfile++
     }
@@ -243,7 +245,7 @@ fun main() {
         }
         if (((currentAsset/max.toFloat())*1000).toInt() > currentThou){
             currentThou = ((currentAsset/max.toFloat())*1000).toInt()
-            println((((currentAsset/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete.")
+            println(df.format(((currentAsset/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete.")
         }
         currentAsset++
     }
