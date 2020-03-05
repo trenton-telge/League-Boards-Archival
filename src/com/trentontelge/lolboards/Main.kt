@@ -106,7 +106,6 @@ fun main() {
     println("Backing Up Profiles")
     var max = profileIndex.size
     var currentProfile = 1
-    var currentThou = 0
     for (profileURL in profileIndex){
         val localParent = File(outputParent.toString() + profileURL.substring(profileURL.indexOf('m')+2, profileURL.lastIndexOf('/')) + System.getProperty("file.separator"))
         localParent.mkdirs()
@@ -124,9 +123,8 @@ fun main() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        if (((currentProfile/max.toFloat())*1000).toInt() > currentThou){
-            currentThou = ((currentProfile/max.toFloat())*1000).toInt()
-            println(df.format(((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete.")
+        if (currentProfile%100 == 0){
+            println(df.format(currentProfile/max) + " percent complete.")
         }
         currentProfile++
     }
@@ -134,7 +132,6 @@ fun main() {
     println("Backing Up Posts")
     max = postIndex.size
     var currentPost = 1
-    currentThou = 0
     for (postURL in postIndex){
         val localParent = File(outputParent.toString() + postURL.substring(postURL.indexOf('m')+2, postURL.lastIndexOf('/')) + System.getProperty("file.separator"))
         localParent.mkdirs()
@@ -152,9 +149,8 @@ fun main() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        if (((currentPost/max.toFloat())*1000).toInt() > currentThou){
-            currentThou = ((currentPost/max.toFloat())*1000).toInt()
-            println(df.format(((currentPost/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete.")
+        if (currentPost%100 == 0){
+            println(df.format(currentPost/max) + " percent complete.")
         }
         currentPost++
     }
@@ -177,7 +173,6 @@ fun main() {
     }
     max = postIndex.size
     currentPost = 1
-    currentThou = 0
     for (i in localPosts){
         val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
         val matcher = p.matcher("") // Create a matcher for the pattern
@@ -186,15 +181,13 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
-        if (((currentPost/max.toFloat())*1000).toInt() > currentThou){
-            currentThou = ((currentPost/max.toFloat())*1000).toInt()
-            println(df.format(((currentPost/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete with posts.")
+        if (currentPost%100 == 0){
+            println(df.format(currentPost/max) + " percent complete with posts.")
         }
         currentPost++
     }
     max = profileIndex.size
     currentProfile = 1
-    currentThou = 0
     for (i in localProfiles){
         val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
         val matcher = p.matcher("") // Create a matcher for the pattern
@@ -203,9 +196,8 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
-        if (((currentProfile/max.toFloat())*1000).toInt() > currentThou){
-            currentThou = ((currentProfile/max.toFloat())*1000).toInt()
-            println(df.format(((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete with profiles.")
+        if (currentProfile%100 == 0){
+            println(df.format(currentProfile/max) + " percent complete with profiles.")
         }
         currentProfile++
     }
@@ -226,7 +218,6 @@ fun main() {
     println("Backing Up Assets")
     max = profileIndex.size
     var currentAsset = 1
-    currentThou = 0
     for (assetURL in assetIndex){
         val localParent = File(outputParent.toString() + assetURL.substring(assetURL.indexOf('/')+2, assetURL.lastIndexOf('/')) + System.getProperty("file.separator"))
         localParent.mkdirs()
@@ -243,9 +234,8 @@ fun main() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        if (((currentAsset/max.toFloat())*1000).toInt() > currentThou){
-            currentThou = ((currentAsset/max.toFloat())*1000).toInt()
-            println(df.format(((currentAsset/max.toFloat())*1000).toInt().toFloat()/10F) + " percent complete.")
+        if (currentAsset%100 == 0){
+            println(df.format(currentAsset/max) + " percent complete.")
         }
         currentAsset++
     }
