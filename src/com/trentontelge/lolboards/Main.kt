@@ -18,6 +18,8 @@ fun main() {
     val profileIndex:Vector<String> = Vector()
     val postIndex:Vector<String> = Vector()
     val assetIndex:Vector<String> = Vector()
+    val localProfiles:Vector<String> = Vector()
+    val localPosts:Vector<String> = Vector()
     val tlPrefix = "https://boards.na.leagueoflegends.com/en/?sort_type=recent&num_loaded="
     val outputParent = File(System.getProperty("user.home") + System.getProperty("file.separator") + "boards.na.leagueoflegends.com" + System.getProperty("file.separator"))
     outputParent.mkdir()
@@ -106,6 +108,7 @@ fun main() {
     for (profileURL in profileIndex){
         val localParent = File(outputParent.toString() + profileURL.substring(profileURL.indexOf('m')+2, profileURL.lastIndexOf('/')) + System.getProperty("file.separator"))
         localParent.mkdirs()
+        localProfiles.addElement(localParent.toString() + profileURL.substring(profileURL.lastIndexOf('/')+1) + ".html")
         try {
             BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
                 FileOutputStream(File(localParent.toString() + profileURL.substring(profileURL.lastIndexOf('/')+1) + ".html")).use({ fileOutputStream ->
@@ -133,6 +136,7 @@ fun main() {
     for (postURL in postIndex){
         val localParent = File(outputParent.toString() + postURL.substring(postURL.indexOf('m')+2, postURL.lastIndexOf('/')) + System.getProperty("file.separator"))
         localParent.mkdirs()
+        localPosts.addElement(localParent.toString() + postURL.substring(postURL.lastIndexOf('/')+1) + ".html")
         try {
             BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
                 FileOutputStream(File(localParent.toString() + postURL.substring(postURL.lastIndexOf('/')+1) + ".html")).use({ fileOutputStream ->
@@ -165,16 +169,50 @@ fun main() {
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
         if (pageCurrent > 0 && pageCurrent/274%10 == 0){
-            println(((pageCurrent/274/100F)).toString() + " percent complete.")
+            println(((pageCurrent/274/100F)).toString() + " percent complete with top-level.")
         }
         pageCurrent++
-        /*
-        * Referenced in relative links, add once:
-        *    https://boards.na.leagueoflegends.com/css/app.3.156.0.css
-        *    https://boards.na.leagueoflegends.com/css/mobile.700px.3.156.0.css
-        * */
+    }
+    max = postIndex.size
+    currentPost = 1
+    currentThou = 0
+    for (i in localPosts){
+        val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
+        val matcher = p.matcher("") // Create a matcher for the pattern
+        Files.lines(File(i).toPath())
+                .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
+                .filter { obj: Matcher -> obj.matches() }
+                .findFirst()
+                .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
+        if (((currentPost/max.toFloat())*1000).toInt() > currentThou){
+            currentThou = ((currentPost/max.toFloat())*1000).toInt()
+            println((((currentPost/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete with posts.")
+        }
+        currentPost++
+    }
+    max = profileIndex.size
+    currentProfile = 1
+    currentThou = 0
+    for (i in localProfiles){
+        val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
+        val matcher = p.matcher("") // Create a matcher for the pattern
+        Files.lines(File(i).toPath())
+                .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
+                .filter { obj: Matcher -> obj.matches() }
+                .findFirst()
+                .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
+        if (((currentProfile/max.toFloat())*1000).toInt() > currentThou){
+            currentThou = ((currentProfile/max.toFloat())*1000).toInt()
+            println((((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete with profiles.")
+        }
+        currentProfile++
     }
     println("    Converting To Links")
+    /*
+    * Referenced in relative links, add once:
+    *    https://boards.na.leagueoflegends.com/css/app.3.156.0.css
+    *    https://boards.na.leagueoflegends.com/css/mobile.700px.3.156.0.css
+    * */
     assetIndex.addElement("https://boards.na.leagueoflegends.com/css/app.3.156.0.css")
     assetIndex.addElement("https://boards.na.leagueoflegends.com/css/mobile.700px.3.156.0.css")
     for (i in unfilteredAssetResults){
