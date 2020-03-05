@@ -23,17 +23,17 @@ fun main() {
     outputParent.mkdir()
     println("Backing Up boards.na.leagueoflegends.com to " + outputParent.path.toString())
     println("Indexing Boards")
-    while(pageCurrent < 10000){
+    while(pageCurrent < 27400){
         tlIndex.addElement(tlPrefix + 50*pageCurrent)
-        if (pageCurrent > 0 && pageCurrent%100 == 0){
-            println(((pageCurrent/100)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent/274%100 == 0){
+            println(((pageCurrent/274/100)).toString() + " percent complete.")
         }
         pageCurrent++
     }
     println("Finished Indexing")
     println("Backing Up Top Level")
     pageCurrent = 0
-    while (pageCurrent < 10000){
+    while (pageCurrent < 27400){
         try {
             BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
                 FileOutputStream(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html")).use({ fileOutputStream ->
@@ -47,8 +47,8 @@ fun main() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        if (pageCurrent > 0 && pageCurrent%10 == 0){
-            println(((pageCurrent/100F)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
+            println(((pageCurrent/274/100F)).toString() + " percent complete.")
         }
         pageCurrent++
     }
@@ -56,7 +56,7 @@ fun main() {
     println("Indexing Users")
     pageCurrent = 0
     val unfilteredUserResults:Vector<String> = Vector()
-    while (pageCurrent < 10000){
+    while (pageCurrent < 27400){
         val p = Pattern.compile("<span class=\"username\">(.*)</span>")
         val matcher = p.matcher("") // Create a matcher for the pattern
         Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + pageCurrent+1 + ".html").toPath())
@@ -64,8 +64,8 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredUserResults.addElement(m.group(1)) }
-        if (pageCurrent > 0 && pageCurrent%10 == 0){
-            println(((pageCurrent/100F)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
+            println(((pageCurrent/274/100F)).toString() + " percent complete.")
         }
         pageCurrent++
     }
@@ -79,7 +79,7 @@ fun main() {
     println("Indexing Posts")
     pageCurrent = 0
     val unfilteredPostResults:Vector<String> = Vector()
-    while (pageCurrent < 10000){
+    while (pageCurrent < 27400){
         val p = Pattern.compile("href=\"/en/c/(\\w+-)*(\\w+)/(\\w+-)*(\\w+)")
         val matcher = p.matcher("") // Create a matcher for the pattern
         Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + pageCurrent+1 + ".html").toPath())
@@ -87,8 +87,8 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredPostResults.addElement(m.group(1)) }
-        if (pageCurrent > 0 && pageCurrent%10 == 0){
-            println(((pageCurrent/100F)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
+            println(((pageCurrent/274/100F)).toString() + " percent complete.")
         }
         pageCurrent++
     }
@@ -100,10 +100,9 @@ fun main() {
     }
     println("Finished Indexing Posts")
     println("Indexing Assets")
-    //TODO
     pageCurrent = 0
     val unfilteredAssetResults:Vector<String> = Vector()
-    while (pageCurrent < 10000){
+    while (pageCurrent < 27400){
         val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
         val matcher = p.matcher("") // Create a matcher for the pattern
         Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + pageCurrent+1 + ".html").toPath())
@@ -111,8 +110,8 @@ fun main() {
                 .filter { obj: Matcher -> obj.matches() }
                 .findFirst()
                 .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
-        if (pageCurrent > 0 && pageCurrent%10 == 0){
-            println(((pageCurrent/100F)).toString() + " percent complete.")
+        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
+            println(((pageCurrent/274/100F)).toString() + " percent complete.")
         }
         pageCurrent++
         /*
