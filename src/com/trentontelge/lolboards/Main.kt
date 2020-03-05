@@ -5,13 +5,16 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
+import java.nio.file.Files
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 fun main() {
     var pageCurrent = 0
     val tlIndex:Vector<String> = Vector()
-    var profileIndex:Vector<String>
+    val profileIndex:Vector<String> = Vector()
     val tlPrefix = "https://boards.na.leagueoflegends.com/en/?sort_type=recent&num_loaded="
     val outputParent = File(System.getProperty("user.home") + System.getProperty("file.separator") + "boards.na.leagueoflegends.com" + System.getProperty("file.separator"))
     outputParent.mkdir()
@@ -49,6 +52,27 @@ fun main() {
     println("Finished Top Level")
     println("Indexing Users")
     //TODO
+    pageCurrent = 0
+    val unfilteredUserResults:Vector<String> = Vector()
+    while (pageCurrent < 10000){
+        val p = Pattern.compile("<span class=\"username\">(.*)</span>")
+        val matcher = p.matcher("") // Create a matcher for the pattern
+        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + pageCurrent+1 + ".html").toPath())
+                .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
+                .filter { obj: Matcher -> obj.matches() }
+                .findFirst()
+                .ifPresent { m: Matcher -> unfilteredUserResults.addElement(m.group(1)) }
+        if (pageCurrent > 0 && pageCurrent%10 == 0){
+            println(((pageCurrent/100F)).toString() + " percent complete.")
+        }
+        pageCurrent++
+    }
+    println("    Converting To Links")
+    for (i in unfilteredUserResults){
+        if (!profileIndex.contains("https://boards.na.leagueoflegends.com/en/player/NA/" + i.substring(23, i.length-7))) {
+            profileIndex.addElement("https://boards.na.leagueoflegends.com/en/player/NA/" + i.substring(23, i.length - 7))
+        }
+    }
     println("Finished Indexing Pofiles")
     println("Indexing Posts")
     //TODO
