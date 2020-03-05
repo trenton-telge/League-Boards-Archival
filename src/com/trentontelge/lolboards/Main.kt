@@ -222,7 +222,31 @@ fun main() {
     }
     println("Finished Indexing Assets")
     println("Backing Up Assets")
-    //TODO
+    max = profileIndex.size
+    var currentAsset = 1
+    currentThou = 0
+    for (assetURL in assetIndex){
+        val localParent = File(outputParent.toString() + assetURL.substring(assetURL.indexOf('/')+2, assetURL.lastIndexOf('/')) + System.getProperty("file.separator"))
+        localParent.mkdirs()
+        try {
+            BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
+                FileOutputStream(File(localParent.toString() + assetURL.substring(assetURL.lastIndexOf('/')+1))).use({ fileOutputStream ->
+                    val dataBuffer = ByteArray(1024)
+                    var bytesRead: Int
+                    while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
+                        fileOutputStream.write(dataBuffer, 0, bytesRead)
+                    }
+                })
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        if (((currentAsset/max.toFloat())*1000).toInt() > currentThou){
+            currentThou = ((currentAsset/max.toFloat())*1000).toInt()
+            println((((currentAsset/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete.")
+        }
+        currentAsset++
+    }
     println("Finished Backing Up Assets")
     println("Performing Link Rewrite")
     //TODO
