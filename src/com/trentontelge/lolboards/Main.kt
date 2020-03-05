@@ -99,36 +99,6 @@ fun main() {
         }
     }
     println("Finished Indexing Posts")
-    println("Indexing Assets")
-    pageCurrent = 0
-    val unfilteredAssetResults:Vector<String> = Vector()
-    while (pageCurrent < 27400){
-        val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
-        val matcher = p.matcher("") // Create a matcher for the pattern
-        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
-                .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
-                .filter { obj: Matcher -> obj.matches() }
-                .findFirst()
-                .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
-        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
-            println(((pageCurrent/274/100F)).toString() + " percent complete.")
-        }
-        pageCurrent++
-        /*
-        * Referenced in relative links, add once:
-        *    https://boards.na.leagueoflegends.com/css/app.3.156.0.css
-        *    https://boards.na.leagueoflegends.com/css/mobile.700px.3.156.0.css
-        * */
-        println("    Converting To Links")
-        assetIndex.addElement("https://boards.na.leagueoflegends.com/css/app.3.156.0.css")
-        assetIndex.addElement("https://boards.na.leagueoflegends.com/css/mobile.700px.3.156.0.css")
-        for (i in unfilteredAssetResults){
-            if(!assetIndex.contains(i.substring(1))){
-                assetIndex.addElement(i.substring(1))
-            }
-        }
-    }
-    println("Finished Indexing Assets")
     println("Backing Up Profiles")
     var max = profileIndex.size
     var currentProfile = 1
@@ -183,6 +153,36 @@ fun main() {
         currentPost++
     }
     println("Finished Backing Up Posts")
+    println("Indexing Assets")
+    pageCurrent = 0
+    val unfilteredAssetResults:Vector<String> = Vector()
+    while (pageCurrent < 27400){
+        val p = Pattern.compile("(['\"])https?://((lolstatic-a.akamaihd.net)|(ddragon.leagueoflegends.com)|(avatar.leagueoflegends.com)|(cdn.leagueoflegends.com))(/([a-zA-z0-9]|\\.|_|-)+)+.(png|jpg|jpeg|css|mp4|gif|bmp)")
+        val matcher = p.matcher("") // Create a matcher for the pattern
+        Files.lines(File(outputParent.toString() + System.getProperty("file.separator") + "p" + (pageCurrent+1L) + ".html").toPath())
+                .map { input: String? -> matcher.reset(input) } // Reuse the matcher object
+                .filter { obj: Matcher -> obj.matches() }
+                .findFirst()
+                .ifPresent { m: Matcher -> unfilteredAssetResults.addElement(m.group(1)) }
+        if (pageCurrent > 0 && pageCurrent/274%10 == 0){
+            println(((pageCurrent/274/100F)).toString() + " percent complete.")
+        }
+        pageCurrent++
+        /*
+        * Referenced in relative links, add once:
+        *    https://boards.na.leagueoflegends.com/css/app.3.156.0.css
+        *    https://boards.na.leagueoflegends.com/css/mobile.700px.3.156.0.css
+        * */
+    }
+    println("    Converting To Links")
+    assetIndex.addElement("https://boards.na.leagueoflegends.com/css/app.3.156.0.css")
+    assetIndex.addElement("https://boards.na.leagueoflegends.com/css/mobile.700px.3.156.0.css")
+    for (i in unfilteredAssetResults){
+        if(!assetIndex.contains(i.substring(1))){
+            assetIndex.addElement(i.substring(1))
+        }
+    }
+    println("Finished Indexing Assets")
     println("Backing Up Assets")
     //TODO
     println("Finished Backing Up Assets")
