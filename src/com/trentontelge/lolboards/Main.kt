@@ -130,7 +130,31 @@ fun main() {
     }
     println("Finished Indexing Assets")
     println("Backing Up Profiles")
-    //TODO
+    val max = profileIndex.size
+    var currentProfile = 1
+    var currentThou = 0
+    for (profileURL in profileIndex){
+        val localParent = File(outputParent.toString() + profileURL.substring(profileURL.indexOf('m')+2, profileURL.lastIndexOf('/')) + System.getProperty("file.separator"))
+        localParent.mkdirs()
+        try {
+            BufferedInputStream(URL(tlIndex[pageCurrent]).openStream()).use { `in` ->
+                FileOutputStream(File(localParent.toString() + profileURL.substring(profileURL.lastIndexOf('/')+1) + ".html")).use({ fileOutputStream ->
+                    val dataBuffer = ByteArray(1024)
+                    var bytesRead: Int
+                    while (`in`.read(dataBuffer, 0, 1024).also { bytesRead = it } != -1) {
+                        fileOutputStream.write(dataBuffer, 0, bytesRead)
+                    }
+                })
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        if (((currentProfile/max.toFloat())*1000).toInt() > currentThou){
+            currentThou = ((currentProfile/max.toFloat())*1000).toInt()
+            println((((currentProfile/max.toFloat())*1000).toInt().toFloat()/10F).toString() + " percent complete.")
+        }
+        currentProfile++
+    }
     println("Finished Backing Up Profiles")
     println("Backing Up Posts")
     //TODO
